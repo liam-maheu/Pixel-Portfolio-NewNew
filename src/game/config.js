@@ -4,13 +4,21 @@ import PreloadScene from './scenes/PreloadScene';
 import { StartScene } from './scenes/StartScene';
 
 export const config = {
-  type: Phaser.AUTO,
+  type: Phaser.WEBGL,
   parent: 'game-container',
   scale: {
     mode: Phaser.Scale.FIT,
     width: 1920,
     height: 1080,
-    autoCenter: Phaser.Scale.CENTER_BOTH
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    min: {
+      width: 800,
+      height: 600
+    },
+    max: {
+      width: 1920,
+      height: 1080
+    }
   },
   backgroundColor: '#44aa44',
   physics: {

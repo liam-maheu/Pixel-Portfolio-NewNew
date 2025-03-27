@@ -11,9 +11,10 @@ export default defineConfig({
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: true,
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
-        sourcemapExcludeSources: false,
+        manualChunks: undefined
       }
     }
   },
@@ -25,19 +26,9 @@ export default defineConfig({
   },
   publicDir: 'public',
   base: '/',
-  assetsInclude: ['**/*.mp3', '**/*.png', '**/*.jpg', '**/*.jpeg'],
-  build: {
-    rollupOptions: {
-      output: {
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.mp3')) {
-            return 'assets/audio/[name][extname]';
-          }
-          if (assetInfo.name.match(/\.(png|jpg|jpeg)$/)) {
-            return 'assets/images/[name][extname]';
-          }
-        }
-      }
+  css: {
+    modules: {
+      localsConvention: 'camelCase'
     }
   }
 }); 

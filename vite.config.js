@@ -1,22 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-export default defineConfig({
+const config = {
   plugins: [react()],
   server: {
     port: 3000,
     open: true
-  },
-  build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
-    sourcemap: true,
-    cssCodeSplit: true,
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
   },
   resolve: {
     extensions: ['.js', '.jsx']
@@ -31,4 +20,19 @@ export default defineConfig({
       localsConvention: 'camelCase'
     }
   }
-}); 
+};
+
+// Add build configuration separately
+config.build = {
+  outDir: 'dist',
+  assetsDir: 'assets',
+  sourcemap: true,
+  cssCodeSplit: true,
+  rollupOptions: {
+    output: {
+      manualChunks: undefined
+    }
+  }
+};
+
+export default defineConfig(config); 

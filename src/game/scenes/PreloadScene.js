@@ -36,12 +36,9 @@ export default class PreloadScene extends Phaser.Scene {
         });
 
         // Load game assets
-        this.load.setBaseURL('/assets');
-        
-        // Load temporary assets (we'll replace these with your actual assets later)
-        this.load.image('background', 'https://labs.phaser.io/assets/skies/space3.png');
-        this.load.image('player', 'https://labs.phaser.io/assets/sprites/phaser-dude.png');
-        this.load.image('ground', 'https://labs.phaser.io/assets/sprites/platform.png');
+        this.load.image('background', 'assets/images/background.png');
+        this.load.image('player', 'assets/images/player.png');
+        this.load.image('ground', 'assets/images/ground.png');
     }
 
     create() {

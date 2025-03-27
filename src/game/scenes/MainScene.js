@@ -63,8 +63,18 @@ export default class MainScene extends Phaser.Scene {
     
     graphics.destroy();
 
-    // Load background music
-    this.load.audio('bgMusic', '/assets/audio/background-music.mp3');
+    // Load background music with error handling and debug logging
+    console.log('Attempting to load audio file...');
+    this.load.audio('bgMusic', 'assets/audio/background-music.mp3');
+    
+    // Add load complete handler
+    this.load.on('complete', () => {
+      console.log('Audio loading complete');
+    });
+    
+    this.load.on('error', (file) => {
+      console.error('Error loading audio:', file);
+    });
   }
 
   create() {
@@ -107,17 +117,33 @@ export default class MainScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.09, 0.09);
     this.cameras.main.setDeadzone(100, 100);
 
-    // Setup input
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.wasd = {
-      up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
-      down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
-      left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
-      right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-    };
+    // Setup input with error handling
+    try {
+      console.log('Initializing input system...');
+      this.cursors = this.input.keyboard.createCursorKeys();
+      this.wasd = {
+        up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W),
+        down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S),
+        left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A),
+        right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+      };
+      console.log('Input system initialized successfully');
+      
+      // Add input event listeners for debugging
+      this.input.keyboard.on('keydown', (event) => {
+        console.log('Key pressed:', event.key);
+      });
+      
+      this.input.keyboard.on('keyup', (event) => {
+        console.log('Key released:', event.key);
+      });
+    } catch (error) {
+      console.error('Error initializing input system:', error);
+    }
 
     // Add ESC key binding
     this.input.keyboard.on('keydown-ESC', () => {
+      console.log('ESC key pressed');
       this.toggleMenu();
     });
 
@@ -143,7 +169,7 @@ export default class MainScene extends Phaser.Scene {
     const mask = shape.createGeometryMask();
     this.minimap.setMask(mask);
 
-    // Add music controls (moved to top left)
+    // Add music controls with error handling
     const musicButton = this.add.text(20, 20, '🔊', {
       fontSize: '32px',
       fill: '#fff'
@@ -152,12 +178,16 @@ export default class MainScene extends Phaser.Scene {
     .setInteractive();
 
     musicButton.on('pointerdown', () => {
-      if (this.bgMusic.isPlaying) {
-        this.bgMusic.pause();
-        musicButton.setText('🔈');
-      } else {
-        this.bgMusic.resume();
-        musicButton.setText('🔊');
+      try {
+        if (this.bgMusic && this.bgMusic.isPlaying) {
+          this.bgMusic.pause();
+          musicButton.setText('🔈');
+        } else if (this.bgMusic) {
+          this.bgMusic.resume();
+          musicButton.setText('🔊');
+        }
+      } catch (error) {
+        console.error('Error toggling music:', error);
       }
     });
 
@@ -165,12 +195,20 @@ export default class MainScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.structures);
     this.physics.add.collider(this.player, this.riverBounds);
 
-    // Add background music
-    this.bgMusic = this.sound.add('bgMusic', {
-      volume: 0.5,
-      loop: true
-    });
-    this.bgMusic.play();
+    // Add background music with error handling
+    try {
+      console.log('Creating background music...');
+      this.bgMusic = this.sound.add('bgMusic', {
+        volume: 0.5,
+        loop: true
+      });
+      console.log('Attempting to play background music...');
+      this.bgMusic.play().catch(error => {
+        console.error('Error playing background music:', error);
+      });
+    } catch (error) {
+      console.error('Error creating background music:', error);
+    }
   }
 
   createRiver() {
@@ -488,20 +526,24 @@ export default class MainScene extends Phaser.Scene {
     let velocityX = 0;
     let velocityY = 0;
 
-    // Handle horizontal movement
+    // Debug input state
     if (this.cursors.left.isDown || this.wasd.left.isDown) {
+      console.log('Left movement detected');
       velocityX = -speed;
       this.facing = 'left';
-    } else if (this.cursors.right.isDown || this.wasd.right.isDown) {
+    }
+    if (this.cursors.right.isDown || this.wasd.right.isDown) {
+      console.log('Right movement detected');
       velocityX = speed;
       this.facing = 'right';
     }
-
-    // Handle vertical movement
     if (this.cursors.up.isDown || this.wasd.up.isDown) {
+      console.log('Up movement detected');
       velocityY = -speed;
       this.facing = 'up';
-    } else if (this.cursors.down.isDown || this.wasd.down.isDown) {
+    }
+    if (this.cursors.down.isDown || this.wasd.down.isDown) {
+      console.log('Down movement detected');
       velocityY = speed;
       this.facing = 'down';
     }
